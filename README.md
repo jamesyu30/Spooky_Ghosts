@@ -1,1 +1,1 @@
-# app
+# Story wiki by Spooky Ghosts
