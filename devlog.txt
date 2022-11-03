@@ -1,0 +1,2 @@
+JamesY -- 2022-11-2 22:07
+Added component map to the design doc and clarified the editing page specifications
