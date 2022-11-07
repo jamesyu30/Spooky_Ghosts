@@ -30,7 +30,7 @@ def login(): #checks if inputs match
 def register():
     return render_template('register.html')
 
-@app.route("/register2", methods=['GET', 'POST'])
+@app.route("/create", methods=['GET', 'POST'])
 def verify():
     return "test"
 """
