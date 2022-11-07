@@ -19,20 +19,21 @@ def home():
 def login(): #checks if inputs match
     if request.method == "POST":
         if user != request.form['username']: #if username doesn't match
-            return "Username is wrong"
+            return "Invalid username"
         if passw != request.form['password']: #if password doesn't match
-            return "Password is wrong"
+            return "Invalid password"
         else:
             session['username'] = request.form['username'] #if they both match, create a session
             return redirect("/auth", code=307) #code 307 makes the redirect make a post request
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
-    return render_template()
+    return render_template('register.html')
 
 @app.route("/register2", methods=['GET', 'POST'])
-
-
+def verify():
+    return "test"
+"""
 @app.route("/auth", methods=['GET', 'POST'])
 def auth():
     return "<h1>Welcome, " + session['username'] +"</h1><br>" + render_template('response.html')
@@ -42,7 +43,7 @@ def auth():
 def logout():
     session.pop('username') #gets rid of session
     return redirect("/")#goes home
-
+"""
 if __name__ == "__main__": 
     app.debug = True 
     app.run()    
