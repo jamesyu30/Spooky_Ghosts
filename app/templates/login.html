@@ -3,9 +3,9 @@
 
 	<form action="/login" method="POST">
 		<label>Username</label>
-		<input type="text" name="username"> <br>
+		<input type="text" name="username" minlength="3" required> <br>
 		<label>Password&nbsp;</label>
-		<input type="text" name="password">
+		<input type="password" minlength="3" name="password" required>
 		<input type="submit" name="login" value="Login"> <!-- value renames the submit button-->
 	</form>
   <br> Don't have an account?

@@ -2,9 +2,9 @@
   <form action="/create" method="POST">
     <h2>Create an account </h2>
     <label>Username</label>
-    <input type="text" name="createusername"> <br>
+    <input type="text" name="createusername" minlength="3" required> <br>
     <label>Password&nbsp;</label>
-    <input type="text" name="createpassword">
+    <input type="password" minlength="3" name="createpassword" required>
     <input type="submit" name="create" value="Create account">
   </form>
   <form action="/">
