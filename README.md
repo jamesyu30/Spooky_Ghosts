@@ -1,6 +1,6 @@
 # Story wiki by Spooky Ghosts
 James - Project Manager  
-Jun Hong - Developer
+Jun Hong - Developer  
 Thomas - Developer  
 
 Description:  
