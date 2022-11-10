@@ -1,7 +1,7 @@
 # Story wiki by Spooky Ghosts
-James - Project Manager  
-Jun Hong - Developer  
-Thomas - Developer  
+James - Project manager, login page, registration page  
+Jun Hong - Developer, editing stories   
+Thomas - Developer, creating stories, landing page 
 
 Description:  
 
