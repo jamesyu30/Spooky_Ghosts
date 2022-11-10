@@ -20,13 +20,6 @@ s.execute("DROP TABLE if exists story")
 command = f"CREATE TABLE story (title TEXT, story TEXT, edited TEXT);"
 s.execute(command)
 
-'''
-def to_string(c):
-    result = ""
-    for i in c:
-        string = "".join(i)
-        result = result+string
-'''   
     
 @app.route("/")
 def home():
@@ -53,29 +46,39 @@ def register():
 
 @app.route("/create", methods=['GET', 'POST'])
 def verify():
-    insert = f"INSERT INTO accounts VALUES (\"{request.form['createusername']}\", \"{request.form['createpassword']}\")"
-    c.execute(insert)
-    db.commit()
-    """ PRINTS TABLE
-    c.execute("SELECT * FROM accounts")
-    rows = c.fetchall() 
-    table = ""
-    for row in rows:
-        row2 = "".join(row)
-       # print(row)
-        table = table+row2
-    #db.close()
-    """
+    usern = []
+    for name in c.execute('SELECT username FROM accounts'): #turns data into list
+        usern.append(name[0])
+    if not request.form['createusername'] in usern:
+        insert = f"INSERT INTO accounts VALUES (\"{request.form['createusername']}\", \"{request.form['createpassword']}\")"
+        c.execute(insert)
+        db.commit()
+        """ PRINTS TABLE
+        c.execute("SELECT * FROM accounts")
+        rows = c.fetchall() 
+        table = ""
+        for row in rows:
+            row2 = "".join(row)
+           # print(row)
+            table = table+row2
+        #db.close()
+        """
+    else:
+        return "Username is already taken <br><form action=\"/\"><input type=\"submit\" value=\"Back\"></form>"
     return redirect("/")
 
 @app.route("/auth", methods=['GET', 'POST'])
 def auth():
-    stitles = s.execute("SELECT title from story;")
-    rows = s.fetchall()
-    #print(rows) #prints titles
+    display = "<form action=\"view\">"
+    titles = []
+    for t in s.execute('SELECT title FROM story'): #turns data into list
+        titles.append(t[0])
+    #print(titles) #prints titles
     #parsing titles
-    
-    return "<h1>Welcome, " + session['username'] +"</h1><br>" + render_template('landing.html')
+    for t in titles:
+        display = display + f"<input type=\"submit\" name=\"{t}\" value=\"{t}\">"
+    return "<h1>Welcome, " + session['username'] +"</h1><hr><br><h2>View Stories</h2>" \
+           + display + "</form><br>" + render_template('landing.html')
     #post request makes session['username'] not return an error on refresh
 
 @app.route("/logout")
@@ -83,7 +86,9 @@ def logout():
     try:
         session.pop('username') #gets rid of session
     except:
-        return redirect("/") 
+        return redirect("/")
+    db.close()
+    dbstory.close()
     return redirect("/")#goes home
 
 @app.route("/story", methods=['GET', 'POST'])
@@ -109,6 +114,10 @@ def story():
     except:
         return redirect("/")
     return "<h2>Created story!</h2> <br><form action=\"/\"><input type=\"submit\" value=\"Return home\"></form>"
+
+@app.route("/view", methods=['GET', 'POST'])
+def view():
+    return request.forms['name']
 
 if __name__ == "__main__": 
     app.debug = True
