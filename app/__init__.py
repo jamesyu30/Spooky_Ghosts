@@ -70,6 +70,11 @@ def verify():
 
 @app.route("/auth", methods=['GET', 'POST'])
 def auth():
+    stitles = s.execute("SELECT title from story;")
+    rows = s.fetchall()
+    #print(rows) #prints titles
+    #parsing titles
+    
     return "<h1>Welcome, " + session['username'] +"</h1><br>" + render_template('landing.html')
     #post request makes session['username'] not return an error on refresh
 
