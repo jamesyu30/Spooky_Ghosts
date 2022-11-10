@@ -12,6 +12,21 @@ c = db.cursor()
 c.execute("DROP TABLE if exists accounts")
 command = f"CREATE TABLE accounts (username TEXT, password TEXT);"
 c.execute(command)
+
+STORY_DB_FILE="story.db"            
+dbstory = sqlite3.connect(STORY_DB_FILE, check_same_thread=False)
+s = dbstory.cursor()
+s.execute("DROP TABLE if exists story")
+command = f"CREATE TABLE story (title TEXT, story TEXT, edited TEXT);"
+s.execute(command)
+
+'''
+def to_string(c):
+    result = ""
+    for i in c:
+        string = "".join(i)
+        result = result+string
+'''   
     
 @app.route("/")
 def home():
@@ -60,10 +75,48 @@ def auth():
 
 @app.route("/logout")
 def logout():
-    session.pop('username') #gets rid of session
+    try:
+        session.pop('username') #gets rid of session
+    except:
+        return redirect("/") 
     return redirect("/")#goes home
 
+@app.route("/story", methods=['GET', 'POST'])
+def create():
+    return render_template('story.html')
+
+@app.route("/createstory", methods=['GET', 'POST'])
+def story():
+    try:
+        titles = []
+        for t in s.execute('SELECT title FROM story'): #turns data into list
+            titles.append(t[0])
+        #print(titles)
+        if not request.form['title'] in titles: #checks for duplicates
+            insert = f"INSERT INTO story VALUES (\"{request.form['title']}\", \"{request.form['story']}\", \"{session['username']}\")"
+            s.execute(insert)
+            dbstory.commit()
+            #s.execute("SELECT * FROM story")
+            #rows = s.fetchall()
+            #print(rows)
+        else:
+            return "Title is already taken. Try another"
+    except:
+        return redirect("/")
+    return "<h2>Created story!</h2> <br><form action=\"/\"><input type=\"submit\" value=\"Return home\"></form>"
 
 if __name__ == "__main__": 
     app.debug = True
     app.run()    
+
+'''
+ s.execute("SELECT edited FROM story")
+        e = s.fetchall()
+        test=""
+        for l in e:
+            row2 = "".join(l)
+            test = test+" "+row2+" "
+        #insert = f"UPDATE story SET edited = '{q}' WHERE title = 123"
+        print(test)
+        #s.execute(insert)
+'''
