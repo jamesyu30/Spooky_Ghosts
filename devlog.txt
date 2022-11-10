@@ -3,3 +3,10 @@ Added component map to the design doc and clarified the editing page specificati
 
 JamesY -- 2022-11-7 20:24
 Created a functional login and register feature 
+- Register page adds account data (username, password) into accounts.db
+- Login page checks if the credentials match
+
+JamesY -- 2022-11-8 19:56
+Added a feature to create stories
+- Adds title, text, and editors to story.db
+- Checks for duplicate titles
