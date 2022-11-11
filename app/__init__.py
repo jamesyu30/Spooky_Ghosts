@@ -69,16 +69,37 @@ def verify():
 
 @app.route("/auth", methods=['GET', 'POST'])
 def auth():
-    display = "<form action=\"view\">"
+    display = "<form action=\"/view\" method='POST'>"
+    editable = "<form action=\"/edit\" method='POST'>"
     titles = []
-    for t in s.execute('SELECT title FROM story'): #turns data into list
-        titles.append(t[0])
+    edited = []
+    for t in s.execute(f"SELECT title FROM story WHERE edited GLOB \"{session['username']}\""): #turns data into list
+        titles.append(t[0])#list of all of the stories
+    for e in s.execute(f"SELECT title FROM story WHERE edited NOT GLOB \"{session['username']}\""):
+        edited.append(e[0])#list of stories the user hasn't edited
     #print(titles) #prints titles
     #parsing titles
+    #print(edited)
     for t in titles:
-        display = display + f"<input type=\"submit\" name=\"{t}\" value=\"{t}\">"
-    return "<h1>Welcome, " + session['username'] +"</h1><hr><br><h2>View Stories</h2>" \
-           + display + "</form><br>" + render_template('landing.html')
+        display = display + f"<input type=\"radio\" id=\"{t}\" name=\"stories\" value=\"{t}\" required> <label for=\"{t}\">{t}</label>"
+    for e in edited:
+        editable = editable + f"<input type=\"radio\" id=\"{e}\" name=\"edit\" value=\"{e}\" required> <label for=\"{e}\">{e}</label>"
+    #hides the edit/view button to not cause any errors
+    if len(display)>35 and len(editable)>35:
+        return "<h1>Welcome, " + session['username'] +"</h1><hr><h2>View stories you've contributed to</h2>" \
+           + display + "<br><input type=\"submit\" value=\"View\"></form><br>" \
+           + "<h2>Edit a story</h2>" + editable + \
+           "<br><input type=\"submit\" value=\"Edit\"></form><br>"+render_template('landing.html')
+    elif len(display)>35:
+        return "<h1>Welcome, " + session['username'] +"</h1><hr><h2>View stories you've contributed to</h2>" \
+           + display + "<br><input type=\"submit\" value=\"View\"></form><br>" \
+           + "<h2>Edit a story</h2>"+render_template('landing.html')
+    elif len(editable)>35:
+        return "<h1>Welcome, " + session['username'] +"</h1><hr><h2>View stories you've contributed to</h2>" \
+           + "<h2>Edit a story</h2>" + editable + \
+           "<br><input type=\"submit\" value=\"Edit\"></form><br>"+render_template('landing.html')
+    else:
+        return "<h1>Welcome, " + session['username'] +"</h1><hr><br><h2>View stories you've contributed to</h2>" + "<br><h2>Edit a story</h2>" + render_template('landing.html')
     #post request makes session['username'] not return an error on refresh
 
 @app.route("/logout")
@@ -87,8 +108,8 @@ def logout():
         session.pop('username') #gets rid of session
     except:
         return redirect("/")
-    db.close()
-    dbstory.close()
+    #db.close()
+    #dbstory.close()
     return redirect("/")#goes home
 
 @app.route("/story", methods=['GET', 'POST'])
@@ -117,7 +138,20 @@ def story():
 
 @app.route("/view", methods=['GET', 'POST'])
 def view():
-    return request.forms['name']
+    com = f"SELECT * FROM story WHERE title = \"{request.form['stories']}\""
+    s.execute(com)
+    #s.execute('SELECT * FROM story')
+    title = ""
+    story = ""
+    for data in s.fetchall():
+        title = data[0]
+        story = data[1]
+    return f"<h1>{title}</h1><hr>{story}<br><br><form action=\"/auth\" method='POST'>"\
+           +"<input type=\"submit\" value=\"Back\"></form>"
+
+@app.route("/edit", methods=['GET', 'POST'])
+def edit():
+    return "<h1 contenteditable=\"true\">test</h1>"
 
 if __name__ == "__main__": 
     app.debug = True
