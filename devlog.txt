@@ -54,3 +54,11 @@ Added a feature to create stories
 - Adds title, text, and editors to story.db
 - Checks for duplicate titles
 ==============================================================
+
+JamesY -- 2022-11-10 20:57
+--------------------------------------------------------------
+Displaying stories
+- In the home page, you can see stories you have contributed to
+- Button to view the story
+- You can see editable stories
+==============================================================
