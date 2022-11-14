@@ -66,5 +66,7 @@ Displaying stories
 JamesY -- 2022-11-14 13:00
 --------------------------------------------------------------
 Revised design doc for wiki
-- Added
+- Added login and register page to sitemap
+- Logout button to sitemap
+- Added all possible paths
 ==============================================================
