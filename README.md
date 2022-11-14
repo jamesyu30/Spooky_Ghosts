@@ -3,7 +3,8 @@ James - Project manager, login page, registration page
 Jun Hong - Developer, editing stories   
 Thomas - Developer, creating stories, landing page 
 
-Description:  
+## Description:  
+A collaborative storytelling website where users can login and create and edit stories. 
 
 ## Launch Codes
 How to clone  
