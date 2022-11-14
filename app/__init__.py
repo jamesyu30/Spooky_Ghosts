@@ -50,8 +50,11 @@ def verify():
     for name in c.execute('SELECT username FROM accounts'): #turns data into list
         usern.append(name[0])
     if not request.form['createusername'] in usern:
-        insert = f"INSERT INTO accounts VALUES (\"{request.form['createusername']}\", \"{request.form['createpassword']}\")"
-        c.execute(insert)
+        #insert = f"INSERT INTO accounts VALUES (\"{request.form['createusername']}\", \"{request.form['createpassword']}\")"
+        #print(request.form['createusername'], request.form['createpassword'])
+        data = [request.form['createusername'], str(request.form['createpassword'])]
+        #? is a placeholder for information in a list of data, make sure data is a list, make sure columns match
+        c.execute("INSERT INTO accounts VALUES(?,?)", data)
         db.commit()
         """ PRINTS TABLE
         c.execute("SELECT * FROM accounts")
