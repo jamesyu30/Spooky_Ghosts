@@ -4,7 +4,7 @@ Jun Hong - Developer, editing stories
 Thomas - Developer, creating stories, landing page 
 
 ## Description:  
-A collaborative storytelling website where users can login and create and edit stories. 
+A collaborative storytelling website where users create stories. Users have to make account in order to do so. Every user is able to view stories they have contributed to as well as editing any stories they haven't already edited. 
 
 ## Launch Codes
 How to clone  
