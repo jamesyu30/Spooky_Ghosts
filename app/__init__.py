@@ -17,7 +17,7 @@ STORY_DB_FILE="story.db"
 dbstory = sqlite3.connect(STORY_DB_FILE, check_same_thread=False)
 s = dbstory.cursor()
 s.execute("DROP TABLE if exists story")
-command = f"CREATE TABLE story (title TEXT, story TEXT, edited TEXT);"
+command = "CREATE TABLE story (title TEXT, story TEXT, edited TEXT);"
 s.execute(command)
 
     
@@ -76,10 +76,16 @@ def auth():
     editable = "<form action=\"/edit\" method='POST'>"
     titles = []
     edited = []
-    for t in s.execute(f"SELECT title FROM story WHERE edited GLOB \"{session['username']}\""): #turns data into list
+    #print(session['username'])
+    susername = [session['username']]
+    for t in s.execute("SELECT title FROM story WHERE edited GLOB ?", susername):
         titles.append(t[0])#list of all of the stories
-    for e in s.execute(f"SELECT title FROM story WHERE edited NOT GLOB \"{session['username']}\""):
+    #for t in s.execute(f"SELECT title FROM story WHERE edited GLOB \"{session['username']}\""): #turns data into list
+    #    titles.append(t[0])#list of all of the stories
+    for e in s.execute("SELECT title FROM story WHERE edited NOT GLOB ?", susername):
         edited.append(e[0])#list of stories the user hasn't edited
+    #for e in s.execute(f"SELECT title FROM story WHERE edited NOT GLOB \"{session['username']}\""):
+    #    edited.append(e[0])#list of stories the user hasn't edited
     #print(titles) #prints titles
     #parsing titles
     #print(edited)
@@ -127,23 +133,22 @@ def story():
             titles.append(t[0])
         #print(titles)
         if not request.form['title'] in titles: #checks for duplicates
-            insert = f"INSERT INTO story VALUES (\"{request.form['title']}\", \"{request.form['story']}\", \"{session['username']}\")"
-            s.execute(insert)
+            info = [request.form['title'], request.form['story'], session['username']]
+            s.execute("INSERT INTO story VALUES (?, ?, ?)", info)
             dbstory.commit()
             #s.execute("SELECT * FROM story")
             #rows = s.fetchall()
             #print(rows)
         else:
-            return "Title is already taken. Try another"
+            return "Title is already taken. Try another title"
     except:
         return redirect("/")
     return "<h2>Created story!</h2> <br><form action=\"/\"><input type=\"submit\" value=\"Return home\"></form>"
 
 @app.route("/view", methods=['GET', 'POST'])
 def view():
-    com = f"SELECT * FROM story WHERE title = \"{request.form['stories']}\""
-    s.execute(com)
-    #s.execute('SELECT * FROM story')
+    print(request.form['stories'])
+    s.execute("SELECT story FROM story WHERE title = ?", request.form['stories'])
     title = ""
     story = ""
     for data in s.fetchall():
@@ -152,9 +157,22 @@ def view():
     return f"<h1>{title}</h1><hr>{story}<br><br><form action=\"/auth\" method='POST'>"\
            +"<input type=\"submit\" value=\"Back\"></form>"
 
+#displays edit page
 @app.route("/edit", methods=['GET', 'POST'])
 def edit():
-    return "<h1 contenteditable=\"true\">test</h1>"
+    story = "<h1>Story:</h1><br>"
+    for paragraph in s.execute("SELECT story FROM story"):
+        story += paragraph[0] + "<br>"
+    return story + render_template('edit.html') + '<form action="/createedit">'
+    
+    #return story+render_template('edit.html')+"<input type=\"submit\" value=\"Edit\">"
+
+@app.route("/createedit", methods=['GET', 'POST'])
+def tryedit():
+    editinfo = [request.form['edittext'], session['username']]
+    s.execute('INSERT INTO story VALUES (NULL, ?, ?)', editinfo)
+    dbstory.commit()
+    return "<h2>Edited story!</h2> <br><form action=\"/\"><input type=\"submit\" value=\"Return home\"></form>"   
 
 if __name__ == "__main__": 
     app.debug = True
