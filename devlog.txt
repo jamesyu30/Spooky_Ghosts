@@ -94,6 +94,13 @@ Jun HongW -- 2022-11-14 20:50
 
 JamesY -- 2022-11-14 20:57
 --------------------------------------------------------------
-- Fixed bugs with edtiing
+- Fixed bugs with editing
 - Fixed bugs with displaying the stories
+==============================================================
+
+ThomasZ -- 2022-11-14 24:10
+--------------------------------------------------------------
+- Revised design doc
+- Fixed bug with editing page where the whole story is 
+  displayed, not just the newest edit
 ==============================================================
