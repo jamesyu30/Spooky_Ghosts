@@ -86,3 +86,9 @@ Jun HongW -- 2022-11-14 17:30
 - Finished adding buggy edit functionality
 - Bug is that one story will appear twice as two different stories
 ==============================================================
+
+JamesY -- 2022-11-14 20:57
+--------------------------------------------------------------
+- Fixed bugs with edtiing
+- Fixed bugs with displaying the stories
+==============================================================
