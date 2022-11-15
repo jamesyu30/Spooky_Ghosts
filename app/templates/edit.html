@@ -1,9 +1,15 @@
 <html>
-  <form action="/createedit" method="POST">
-    <h2>Your contribution:</h2>
+  <h1>{{ t }}</h1>
+  <hr>
+  {{ s }}
+  <br>
+  <br>
+  <br>
+  <form action="/add" method="POST">
+    <label style="font-size:20px;">Edit</label>
     <br>
-    <textarea name="edittext" rows="20" cols="50" minlength="1" maxlength="1000" placeholder="Enter story here..." spellcheck="true" required></textarea> <!-- style allows you to modify the text box -->
-    <br><input type="submit" value="Edit story">
+    <textarea name="edits" rows="20" cols="50" minlength="1" maxlength="1000" placeholder="Add to the story..." spellcheck="true" required></textarea>
+    <br><input type="submit" value="Save changes">
   </form>
   <form action="/">
     <input type="submit" value="Back to home page">
