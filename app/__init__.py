@@ -17,7 +17,7 @@ STORY_DB_FILE="story.db"
 dbstory = sqlite3.connect(STORY_DB_FILE, check_same_thread=False)
 s = dbstory.cursor()
 s.execute("DROP TABLE if exists story")
-command = "CREATE TABLE story (title TEXT, story TEXT, edited TEXT);"
+command = "CREATE TABLE story (title TEXT, story TEXT, edited TEXT, newestedit TEXT);"
 s.execute(command)
 
 #DEMO ACCOUNT
@@ -153,7 +153,7 @@ def story():
             titles.append(t[0])
         #print(titles)
         if not request.form['title'] in titles: #checks for duplicates
-            s.execute("INSERT INTO story VALUES(?,?,?)", [request.form['title'], request.form['story'], session['username']+" "])
+            s.execute("INSERT INTO story VALUES(?,?,?,?)", [request.form['title'], request.form['story'], session['username']+" ", request.form['story']])
             dbstory.commit()
             #s.execute("SELECT * FROM story")
             #rows = s.fetchall()
@@ -187,9 +187,9 @@ def edit():
         story = ""
         for data in s.fetchall():
             title = data[0]
-            story = data[1]
+            story = data[3]
             session['title'] = title
-            session['story'] = story
+            session['story'] = data[1]
     except:
         return redirect("/")
     return render_template('edit.html', t=title, s=story)
@@ -203,7 +203,7 @@ def add():
         name = ""
         for user in edited:
             name = name+"".join(user)
-        s.execute("UPDATE story SET story = (?), edited = (?) WHERE title = (?)", [session['story'] + request.form['edits'], name + session['username']+" ",session['title']])
+        s.execute("UPDATE story SET story = (?), newestedit = (?) , edited = (?) WHERE title = (?)", [session['story'] + request.form['edits'], request.form['edits'], name + session['username']+" ",session['title']])
         session.pop('story')
         session.pop('title')
     except:
@@ -213,4 +213,3 @@ def add():
 if __name__ == "__main__": 
     app.debug = True
     app.run()    
-
